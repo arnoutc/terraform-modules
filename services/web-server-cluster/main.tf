@@ -10,7 +10,7 @@ terraform {
 }
 
 resource "aws_launch_configuration" "example" {
-  image_id = "ami-0d09654d0a20d3ae2"
+  image_id = var.ami
   instance_type = var.instance_type
   security_groups = [aws_security_group.instance.id]
 
@@ -18,6 +18,7 @@ resource "aws_launch_configuration" "example" {
     server_port = var.server_port
     db_address  = data.terraform_remote_state.db.outputs.address
     db_port     = data.terraform_remote_state.db.outputs.port
+    server_text = var.server_text
   })
           
   # Required when using a launch configuration with an auto scaling group.
