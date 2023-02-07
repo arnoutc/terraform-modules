@@ -81,7 +81,7 @@ data "terraform_remote_state" "db" {
   config = {
     bucket = var.db_remote_state_bucket
     key    = var.db_remote_state_key
-    region = "us-east-2"
+    region = "eu-west-2"
   }
 }
 
