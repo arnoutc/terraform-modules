@@ -47,6 +47,66 @@ class TestWebServer < Test::Unit::TestCase
         assert_equal('text/plain', content_type)
         assert_equal('Not Found', body)
     end
+
+    def test_integration_hello
+        do_integration_test('/', lambda { |response|
+        assert_equal(200, response.code.to_i)
+        assert_equal('text/plain', response['Content-Type'])
+        assert_equal('Hello, World', response.body)
+        })
+    end
+
+    def test_integration_api
+        do_integration_test('/api', lambda { |response|
+        assert_equal(201, response.code.to_i)
+        assert_equal('application/json', response['Content-Type'])
+        assert_equal('{"foo":"bar"}', response.body)
+        })
+    end
+
+    def test_integration_404
+        do_integration_test('/invalid-path', lambda { |response|
+        assert_equal(404, response.code.to_i)
+        assert_equal('text/plain', response['Content-Type'])
+        assert_equal('Not Found', response.body)
+        })
+    end
+
+    def test_integration_web_service
+        do_integration_test('/web-service', lambda { |response|
+        assert_equal(200, response.code.to_i)
+        assert_include(response['Content-Type'], 'text/html')
+        assert_include(response.body, 'Example Domain')
+        })
+    end
+
+    def do_integration_test(path, check_response)
+        port = 8000
+        server = WEBrick::HTTPServer.new :Port => port
+        server.mount '/', WebServer
+
+        begin
+            # Start the web server in a separate thread so it
+            # doesn't block the test
+            thread = Thread.new do
+                server.start
+            end
+
+            # Make an HTTP request to the web server at the
+            # specified path
+            uri = URI("http://localhost:#{port}#{path}")
+            response = Net::HTTP.get_response(uri)
+
+            # Use the specified check_response lambda to validate
+            # the response
+            check_response.call(response)
+        ensure
+            # Shut the server and thread down at the end of the
+            # test
+            server.shutdown
+            thread.join
+        end
+    end
 end
 
 class MockWebService
