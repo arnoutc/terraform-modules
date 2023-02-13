@@ -38,11 +38,11 @@ func createDbOpts(t *testing.T, terraformDir string) *terraform.Options {
 
 	bucketForTesting := "pacator-terraform-integration-test-bucket"
 	bucketRegionForTesting := "eu-west-2"
-
 	dbStateKey := fmt.Sprintf("%s/%s/terraform.tfstate", t.Name(), uniqueId)
 
 	return &terraform.Options{
 		TerraformDir: terraformDir,
+		MigrateState: true,
 
 		Vars: map[string]interface{}{
 			"db_name":     fmt.Sprintf("test%s", uniqueId),
@@ -65,6 +65,7 @@ func createHelloOpts(
 
 	return &terraform.Options{
 		TerraformDir: terraformDir,
+		MigrateState: true,
 
 		Vars: map[string]interface{}{
 			"db_remote_state_bucket": dbOpts.BackendConfig["bucket"],
