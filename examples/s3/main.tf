@@ -8,7 +8,7 @@ resource "aws_iam_user_login_profile" "login" {
 
 resource "aws_s3_bucket" "bucket" {
   bucket_prefix = var.bucket_prefix
-  object_lock_enabled = false
+  object_lock_enabled = true
 
   tags = {
     "Name" = "My bucket"
@@ -24,28 +24,28 @@ resource "aws_s3_bucket_versioning" "bucket" {
   }
 }
 
-resource "aws_s3_object" "object" {
-  bucket = aws_s3_bucket.bucket.id
-  for_each = fileset("uploads/", "*")
-  key = each.value
-  source = "uploads/${each.value}"
-  etag = filemd5("uploads/${each.value}")
-  depends_on = [
-    aws_s3_bucket.bucket
-  ]
-}
+# resource "aws_s3_object" "object" {
+#   bucket = aws_s3_bucket.bucket.id
+#   for_each = fileset("uploads/", "*")
+#   key = each.value
+#   source = "uploads/${each.value}"
+#   etag = filemd5("uploads/${each.value}")
+#   depends_on = [
+#     aws_s3_bucket.bucket
+#   ]
+# }
 
 # Setting s3:BypassGovernanceRetention in an inline policy on a user should enable the user to delete the object
 # I was not able to do it though, permission was not put into effect.
-# resource "aws_s3_bucket_object_lock_configuration" "bucket" {
-#   bucket = aws_s3_bucket.bucket.bucket
-#   rule {
-#     default_retention {
-#       mode = "COMPLIANCE"
-#       days = 365
-#     }
-#   } 
-# }
+resource "aws_s3_bucket_object_lock_configuration" "bucket" {
+  bucket = aws_s3_bucket.bucket.bucket
+  rule {
+    default_retention {
+      mode = "GOVERNANCE"
+      days = 1
+    }
+  } 
+}
 
 resource "aws_s3_bucket_acl" "bucket" {
   bucket = aws_s3_bucket.bucket.id
