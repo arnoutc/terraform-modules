@@ -7,7 +7,7 @@ variable "region" {
 variable "bucket_prefix" {
   type = string
   description = "The prefix to use for the s3 bucket name"
-  default = "pacator-bucket"
+  default = "pacator-config-bucket"
 }
 
 variable "upload_source" {
