@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "public_read_write_access" {
     effect = "Allow"
   }
   statement {
-    actions   =["s3:*"]
+    actions   =[ "s3:GetObject", "s3:PutObject", "s3:DeleteObject","s3:ListBucket" ]
     resources = [aws_s3_bucket.bucket.arn]
     effect = "Allow"
   }
