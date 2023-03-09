@@ -1,0 +1,8 @@
+web_acl_name            = "examplewebacl"
+web_acl_metrics         = "examplewebaclmetrics"
+waf_rule_name           = "examplewafrulename"
+waf_rule_metrics        = "examplewafrulemetrics"
+waf_rule_group_name     = "examplewafrulegroupname"
+waf_rule_group_metrics  = "examplewafrulegroupmetrics"
+api_gateway_arn         = "arn:aws:apigateway:eu-west-2::/restapis/x5j0znukb9/stages/test"
+lambda_version          = "1.0.0"

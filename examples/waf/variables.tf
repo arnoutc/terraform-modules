@@ -29,3 +29,7 @@ variable "api_gateway_arn" {
 variable "lambda_version" {
  type = string
 }
+
+output "api_gateway_lambda_base_url" {
+  value = "${aws_api_gateway_deployment.example.invoke_url}"
+}
