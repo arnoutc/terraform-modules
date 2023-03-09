@@ -16,6 +16,10 @@ provider "aws" {
 resource "aws_api_gateway_rest_api" "example" {
   name = "ServerlessExample"
   description = "Terraform Serverless Application Example"
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_integration" "lambda" {
